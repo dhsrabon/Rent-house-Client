@@ -15,7 +15,7 @@ export default function MyPropertiesPage() {
   const fetchProperties = async () => {
     if (!session?.user?.id) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/properties/my/${session.user.id}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/my/${session.user.id}`);
       const data = await res.json();
       if (data.success) {
         setProperties(data.properties);
@@ -36,7 +36,7 @@ export default function MyPropertiesPage() {
     const confirmDelete = window.confirm("Are you sure you want to delete this property?");
     if (confirmDelete) {
       try {
-        const res = await fetch(`http://localhost:5000/api/properties/delete/${id}`, {
+       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/delete/${id}`, {
           method: "DELETE",
         });
         const data = await res.json();

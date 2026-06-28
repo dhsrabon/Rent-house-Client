@@ -12,7 +12,7 @@ export default function OwnerRequests() {
 
   const fetchRequests = async () => {
     if (!session?.user?.id) return;
-    const res = await fetch(`http://localhost:5000/api/bookings/owner-requests/${session.user.id}`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/bookings/owner-requests/${session.user.id}`);
     const data = await res.json();
     if (data.success) setRequests(data.bookings);
     setLoading(false);
@@ -23,7 +23,7 @@ export default function OwnerRequests() {
   }, [session]);
 
   const updateStatus = async (id, status) => {
-    const res = await fetch(`http://localhost:5000/api/bookings/update-status/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/bookings/update-status/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),

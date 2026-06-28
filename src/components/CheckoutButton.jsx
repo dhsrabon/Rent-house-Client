@@ -15,7 +15,7 @@ export default function CheckoutButton({ amount, title }) {
       const stripe = await stripePromise;
 
       // 🔴 এখানে পরিবর্তন করা হয়েছে: localhost:5000 (আপনার এক্সপ্রেস ব্যাকএন্ড)
-      const res = await fetch("http://localhost:5000/api/payment", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/payment`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount, propertyTitle: title }),

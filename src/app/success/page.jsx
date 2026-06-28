@@ -19,7 +19,7 @@ function SuccessContent() {
 
     const verifyPayment = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/payment/verify", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/payment/verify`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ sessionId }),

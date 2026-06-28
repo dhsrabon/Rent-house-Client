@@ -22,7 +22,7 @@ export default function MyBookings() {
       try {
         console.log("Tenant ID (My Bookings):", session.user.id); // 👈 কনসোলে চেক করবেন
 
-        const res = await fetch(`http://localhost:5000/api/bookings/my-bookings/${session.user.id}`);
+     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/bookings/my-bookings/${session.user.id}`);
         const data = await res.json();
         
         console.log("Response from server:", data); // 👈 সার্ভার কী ডাটা দিচ্ছে তা এখানে দেখবেন

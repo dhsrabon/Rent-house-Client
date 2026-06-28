@@ -52,7 +52,7 @@ export default function AddPropertyPage() {
         isFeatured: formData.isFeatured, // 🔴 ডাটাবেসে পাঠানো হচ্ছে
       };
 
-      const response = await fetch("http://localhost:5000/api/properties/add", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
