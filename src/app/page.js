@@ -1,5 +1,5 @@
 "use client";
-
+import CustomerReviews from "@/components/shared/CustomerReviews";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -182,7 +182,7 @@ export default function HomePage() {
       {/* 4. Extra Sections & Reviews (আপনি এখানে আপনার কম্পোনেন্টগুলো বসাতে পারেন) */}
       {/* <TopLocations /> */}
       {/* <RentalStatistics /> */}
-      
+      <CustomerReviews />
     </div>
   );
 }
