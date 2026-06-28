@@ -1,13 +1,11 @@
 "use client";
-import CustomerReviews from "@/components/shared/CustomerReviews";
+
+// 🟢 এখানে @ এর বদলে ../ ব্যবহার করা হয়েছে
+import CustomerReviews from "../components/shared/CustomerReviews"; 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-
-// যদি আপনার কম্পোনেন্টগুলো তৈরি করা থাকে, তবে এগুলো আনকমেন্ট করে ব্যবহার করতে পারেন
-// import TopLocations from "@/components/TopLocations";
-// import RentalStatistics from "@/components/RentalStatistics";
 
 export default function HomePage() {
   const router = useRouter();
@@ -33,7 +31,6 @@ export default function HomePage() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    // সার্চ কোয়েরি তৈরি করে All Properties পেজে পাঠানো হচ্ছে
     const query = new URLSearchParams(searchQuery).toString();
     router.push(`/properties?${query}`);
   };
@@ -179,9 +176,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. Extra Sections & Reviews (আপনি এখানে আপনার কম্পোনেন্টগুলো বসাতে পারেন) */}
-      {/* <TopLocations /> */}
-      {/* <RentalStatistics /> */}
+      {/* 4. Customer Reviews */}
       <CustomerReviews />
     </div>
   );
