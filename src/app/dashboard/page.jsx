@@ -12,7 +12,7 @@ export default function DashboardHome() {
 
   useEffect(() => {
     if (session?.user?.id) {
-      fetch(`http://localhost:5000/api/bookings/analytics/${session.user.id}`)
+      fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/bookings/analytics/${session.user.id}`)
         .then(res => res.json())
         .then(data => setAnalytics(data));
     }

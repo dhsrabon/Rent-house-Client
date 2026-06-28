@@ -23,7 +23,7 @@ export default function HomePage() {
 
   // Featured Properties Fetch
   useEffect(() => {
-    fetch("http://localhost:5000/api/properties/featured")
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/featured`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) setFeatured(data.properties);

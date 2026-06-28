@@ -13,7 +13,7 @@ export default function WishlistPage() {
 
   useEffect(() => {
     if (session?.user?.id) {
-      fetch(`http://localhost:5000/api/wishlist/${session.user.id}`)
+     fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/wishlist/${session.user.id}`)
         .then((res) => res.json())
         .then((data) => {
           if (data.success) setWishlist(data.wishlist);

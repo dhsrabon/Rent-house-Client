@@ -19,7 +19,7 @@ export default function AllProperties() {
 
       try {
         // রিকোয়েস্ট ইউআরএল
-        const url = `http://localhost:5000/api/properties/all?${query.toString()}`;
+        const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/properties/all?${query.toString()}`;
         console.log("Fetching URL:", url); // কনসোলে দেখুন সঠিক ইউআরএল যাচ্ছে কিনা
 
         const res = await fetch(url);
