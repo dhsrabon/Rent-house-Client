@@ -38,13 +38,14 @@ export default function DashboardLayout({ children }) {
 
   const adminLinks = [
     { name: "All Properties", path: "/dashboard/all-properties", icon: "🌐" },
-    { name: "All Users", path: "/dashboard/users", icon: "👥" },
+    { name: "All Bookings", path: "/dashboard/bookings", icon: "🧾" },
+    { name: "Manage Users", path: "/dashboard/users", icon: "👥" },
   ];
 
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-gray-100 hidden md:block flex-shrink-0">
+      <aside className="w-64 bg-white border-r border-gray-100 hidden md:block shrink-0">
         <div className="p-6">
           <Link href="/" className="flex items-center gap-2 text-xl font-bold text-primary mb-8">
             <span className="text-2xl">🏠</span> HouseNest

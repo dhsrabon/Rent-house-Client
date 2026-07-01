@@ -1,7 +1,7 @@
 "use client";
 
 // 🟢 এখানে @ এর বদলে ../ ব্যবহার করা হয়েছে
-import CustomerReviews from "../components/shared/CustomerReviews"; 
+import CustomerReviews from "../components/CustomerReviews"; 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -176,7 +176,25 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. Customer Reviews */}
+      {/* 4. Extra Section */}
+      <section className="py-20 px-4 bg-gradient-to-r from-primary/10 to-secondary/10">
+        <div className="max-w-7xl mx-auto grid gap-8 md:grid-cols-3">
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <h3 className="font-bold text-xl mb-2">1. Search</h3>
+            <p className="text-gray-500">Find homes by location, budget, and type in seconds.</p>
+          </div>
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <h3 className="font-bold text-xl mb-2">2. Book</h3>
+            <p className="text-gray-500">Submit your request and move smoothly through the booking flow.</p>
+          </div>
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <h3 className="font-bold text-xl mb-2">3. Enjoy</h3>
+            <p className="text-gray-500">Stay updated with your bookings and reviews in one dashboard.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Customer Reviews */}
       <CustomerReviews />
     </div>
   );
