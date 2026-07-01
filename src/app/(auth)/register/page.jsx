@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createAuthClient } from "better-auth/react";
+import toast from "react-hot-toast"; // 🟢 Toast ইমপোর্ট করা হলো
 
 const authClient = createAuthClient();
 
@@ -15,7 +16,7 @@ export default function RegisterPage() {
     email: "",
     password: "",
     image: "",
-    role: "tenant", // ডিফল্ট রোল 'tenant'
+    role: "tenant", 
     adminSecret: "",
   });
 
@@ -23,26 +24,47 @@ export default function RegisterPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // 🟢 Password Validation লজিক যোগ করা হলো
+  const validatePassword = (password) => {
+    if (password.length < 6) return "Password must be at least 6 characters long.";
+    if (!/[A-Z]/.test(password)) return "Password must contain at least one uppercase letter.";
+    if (!/[a-z]/.test(password)) return "Password must contain at least one lowercase letter.";
+    return null; // পাসওয়ার্ড ঠিক থাকলে null রিটার্ন করবে
+  };
+
   const handleRegister = async (e) => {
     e.preventDefault();
+    
+    // 🟢 ফর্ম সাবমিটের আগেই পাসওয়ার্ড চেক করে নেওয়া হচ্ছে
+    const passwordError = validatePassword(formData.password);
+    if (passwordError) {
+      toast.error(passwordError); // পাসওয়ার্ড ভুল হলে Toast দেখাবে
+      return;
+    }
+
     setLoading(true);
 
-    const { data, error } = await authClient.signUp.email({
-      email: formData.email,
-      password: formData.password,
-      name: formData.name,
-      image: formData.image,
-      role: formData.role, // 🔴 ড্রপডাউন থেকে সিলেক্ট করা রোল যাবে (tenant/owner/admin)
-      adminSecret: formData.adminSecret, // 🔴 Admin Secret Key পাঠানো হচ্ছে
-      callbackURL: "/dashboard",
-    });
+    try {
+      const { data, error } = await authClient.signUp.email({
+        email: formData.email,
+        password: formData.password,
+        name: formData.name,
+        image: formData.image,
+        role: formData.role, 
+        adminSecret: formData.adminSecret, 
+        callbackURL: "/dashboard",
+      });
 
-    if (error) {
-      alert(error.message);
+      if (error) {
+        toast.error(error.message || "Registration failed!"); // 🟢 Alert এর বদলে Toast.error
+      } else {
+        toast.success("Registration Successful!"); // 🟢 Alert এর বদলে Toast.success
+        router.push("/dashboard");
+      }
+    } catch (err) {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
       setLoading(false);
-    } else {
-      alert("Registration Successful!");
-      router.push("/dashboard");
     }
   };
 
@@ -63,7 +85,6 @@ export default function RegisterPage() {
             <input type="email" name="email" onChange={handleChange} required className="input input-bordered focus:outline-primary" placeholder="email@example.com" />
           </div>
 
-          {/* 🔴 রোল সিলেকশন ড্রপডাউন (এখানে Admin রোল অ্যাড করা হয়েছে) */}
           <div className="form-control">
             <label className="label font-semibold">I want to be a...</label>
             <select name="role" onChange={handleChange} className="select select-bordered focus:outline-primary w-full">
@@ -81,9 +102,10 @@ export default function RegisterPage() {
           <div className="form-control">
             <label className="label font-semibold">Password</label>
             <input type="password" name="password" onChange={handleChange} required className="input input-bordered focus:outline-primary" placeholder="••••••••" />
+            {/* 🟢 পাসওয়ার্ডের রুলস ইউজারের সুবিধার জন্য দেখানো হলো */}
+            <p className="text-xs text-gray-400 mt-1">Min. 6 chars, 1 uppercase, 1 lowercase</p>
           </div>
 
-          {/* Admin Secret Key Field */}
           <div className="form-control">
             <label className="label font-semibold">
               Admin Secret Key <span className="text-gray-400 font-normal text-sm">(Optional)</span>

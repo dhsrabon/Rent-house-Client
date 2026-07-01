@@ -1,64 +1,110 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createAuthClient } from "better-auth/react";
+import toast from "react-hot-toast";
 
-const authClient = createAuthClient();
-
-export default function OwnerRequests() {
-  const { data: session } = authClient.useSession();
-  const [requests, setRequests] = useState([]);
+export default function AllUsers() {
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchRequests = async () => {
-    if (!session?.user?.id) return;
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/bookings/owner-requests/${session.user.id}`);
-    const data = await res.json();
-    if (data.success) setRequests(data.bookings);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchRequests();
-  }, [session]);
-
-  const updateStatus = async (id, status) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/bookings/update-status/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
-    });
-    if (res.ok) {
-      alert("Status Updated!");
-      fetchRequests(); // ডাটা রিফ্রেশ করা
+  // 🟢 ইউজার ফেচ করার ফাংশন
+  const fetchUsers = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/users`);
+      const data = await res.json();
+      if (data.users) {
+        setUsers(data.users);
+      } else {
+        setUsers(data); // যদি API সরাসরি array রিটার্ন করে
+      }
+    } catch (error) {
+      toast.error("Failed to load users");
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (loading) return <p className="p-10">Loading requests...</p>;
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  // 🟢 রোল আপডেট করার ফাংশন
+  const handleRoleChange = async (id, newRole) => {
+    const toastId = toast.loading("Updating role...");
+    
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/users/update-role/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role: newRole }),
+      });
+      
+      if (res.ok) {
+        toast.success(`User role updated to ${newRole}!`, { id: toastId });
+        fetchUsers(); // পেজ রিলোড না করে শুধু ডেটা রিফ্রেশ করা হলো
+      } else {
+        toast.error("Failed to update role", { id: toastId });
+      }
+    } catch (error) {
+      toast.error("Error updating user role.", { id: toastId });
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="p-10 flex justify-center">
+        <span className="loading loading-spinner loading-lg text-primary"></span>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Booking Requests for My Properties</h1>
-      <div className="overflow-x-auto bg-white p-4 rounded-xl shadow">
+    <div className="p-6 max-w-7xl mx-auto">
+      <h1 className="text-3xl font-bold mb-2 text-neutral">Manage Users</h1>
+      <p className="text-gray-500 mb-8 font-medium">View all registered users and manage their roles.</p>
+
+      <div className="overflow-x-auto bg-white rounded-2xl shadow-sm border border-gray-100">
         <table className="table w-full">
-          <thead>
+          <thead className="bg-base-200/50">
             <tr>
-              <th>Property</th>
-              <th>Status</th>
-              <th>Actions</th>
+              <th className="text-sm font-bold">Name</th>
+              <th className="text-sm font-bold">Email</th>
+              <th className="text-sm font-bold">Current Role</th>
+              <th className="text-sm font-bold">Action</th>
             </tr>
           </thead>
           <tbody>
-            {requests.map((r) => (
-              <tr key={r._id}>
-                <td>{r.propertyId?.title}</td>
-                <td><span className={`badge ${r.status === 'Approved' ? 'badge-success' : 'badge-warning'}`}>{r.status}</span></td>
-                <td className="flex gap-2">
-                  <button onClick={() => updateStatus(r._id, 'Approved')} className="btn btn-success btn-sm">Accept</button>
-                  <button onClick={() => updateStatus(r._id, 'Rejected')} className="btn btn-error btn-sm">Reject</button>
+            {users.map((user) => (
+              <tr key={user._id} className="hover:bg-base-50 transition-colors">
+                <td className="font-bold text-neutral">{user.name}</td>
+                <td className="text-gray-500 font-medium">{user.email}</td>
+                <td>
+                  <span className={`badge border-0 font-semibold px-3 py-3 rounded-xl ${
+                    user.role === 'admin' ? 'bg-error/15 text-error' : 
+                    user.role === 'owner' ? 'bg-primary/15 text-primary' : 'bg-success/15 text-success'
+                  }`}>
+                    {user.role}
+                  </span>
+                </td>
+                <td>
+                  <select 
+                    onChange={(e) => handleRoleChange(user._id, e.target.value)}
+                    className="select select-sm select-bordered focus:outline-primary w-full max-w-xs font-medium"
+                    defaultValue={user.role}
+                  >
+                    <option value="tenant">Tenant</option>
+                    <option value="owner">Owner</option>
+                    <option value="admin">Admin</option>
+                  </select>
                 </td>
               </tr>
             ))}
+            
+            {users.length === 0 && (
+              <tr>
+                <td colSpan="4" className="text-center py-8 text-gray-500">No users found.</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

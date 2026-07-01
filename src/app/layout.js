@@ -2,6 +2,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import Navbar from '../components/shared/Navbar';
 import Footer from '../components/shared/Footer';
+import { Toaster } from 'react-hot-toast'; // 🟢 Toast ইমপোর্ট করা হলো
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,6 +20,9 @@ export default function RootLayout({ children }) {
           {children}
         </main>
         <Footer />
+        
+        {/* 🟢 Toaster কম্পোনেন্টটি এখানে যোগ করা হলো */}
+        <Toaster position="top-center" reverseOrder={false} />
       </body>
     </html>
   );
